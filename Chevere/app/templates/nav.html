@@ -1,0 +1,33 @@
+
+<head>
+	<title>Chevere!-Login</title>
+	<link 
+		rel ="shortcut icon"
+		type = "image/ico"
+		href = "/static/img/chevere.ico">
+
+
+</head>
+
+<link rel="stylesheet" type="text/css" href="/static/css/nav.css" media="screen" />
+<nav>
+    <ul>
+      <li><a href="{{url_for('home')}}">Home</a></li>
+      
+      <li><a href="/search">Search</a>
+        
+      <li><a href="{{url_for('user', nickname=g.user.nickname)}}">{{user.name} {user.lastname}}</a>
+      </li>  
+      {% if g.user.is_authenticated() %}
+      <li><a href = "{{url_for('logout')}}">Logout</a></li>
+      {% endif %}
+      <li><a href="/roulette">Roulette!</a>
+        <ul>
+            <li><a href="/email">Via Email</a></li>
+        </ul>
+      </li>
+    </ul>
+</nav>
+
+
+{% block content %} {% endblock %}

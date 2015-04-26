@@ -1,0 +1,6 @@
+{% block content %}
+<h1> {{user.username}}</h1>
+<p><a href="{{url_for('upload')}}"> upload image</p><br>
+<p> <a href="{{url_for('logout')}}"> logout </p>
+<img src="{{user.avatar}}">
+{% endblock %}

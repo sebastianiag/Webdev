@@ -1,0 +1,20 @@
+{% block content %}
+<! DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<head> Testing! </head>
+
+<body>
+
+<h1>Here is the list of professors</h1>
+{% for department in maps.keys() %}
+  <h2>{{department}}</h2>
+  {% for professor in maps[department] %}
+    {% if professor.middle_name != None %}
+      <li>{{professor.first_name}} {{professor.middle_name}} {{professor.last_name}}</li>
+    {% else %}
+      <li>{{professor.first_name}} {{professor.last_name}}</li>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+</body>
+{% endblock %}

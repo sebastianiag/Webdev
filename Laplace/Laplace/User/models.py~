@@ -1,0 +1,88 @@
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
+from django.db import models
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **kwargs):
+        if not email:
+            raise ValueError('Users must have a valid email address')
+            
+        elif not kwargs.get('username'):
+            raise ValueError('Users must have a valid username')
+
+        user = self.model(
+            email = self.normalize_email(email),
+            username = kwargs.get('username')
+        )
+
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password=None, **kwargs):
+        user = self.create_user(email, password, **kwargs)
+        user.is_admin = True
+        user.save()
+
+        return user
+        
+
+class User(AbstractBaseUser):
+    EDUCATION_LEVEL = (
+        ('PE', 'Primary Education'),
+        ('SE', 'High School'),
+        ('CO', 'College'),
+        ('1', ''),
+    )
+    email = models.EmailField(unique=True)
+    username = models.CharField(unique=True, max_length=25)
+    first_name = models.CharField(blank=True, max_length=25)
+    last_name = models.CharField(blank=True, max_length=25)
+    description = models.CharField(blank=True, max_length=200)
+    birthdate = models.CharField(blank=True, max_length=10)
+    is_tutor = models.BooleanField(default=False)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True) #used for loggin
+    
+    education_level = models.CharField(max_length=2, choices=EDUCATION_LEVEL, default='1') # this is giving me problems with defaulting
+    
+    is_admin = models.BooleanField(default=False)
+    
+    objects = UserManager()
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User, related_name='address')
+    addressLine1 = models.CharField(max_length=32, blank=True)
+    addressLine2 = models.CharField(max_length=32, blank=True)
+    city = models.CharField(max_length=25, blank=True)
+    state_province = models.CharField(help_text="State/Province", max_length=25, blank=True)
+
+    modified_at = models.DateTimeField(auto_now=True) #used for loggin
+
+
+class Interests(models.Model):
+    user = models.ForeignKey(User, related_name='interests')
+    interest = models.CharField(max_length=25, blank=True)
+
+
+class Schools(models.Model):
+    user = models.ForeignKey(User, related_name='schools')
+    name = models.CharField(max_length=50, blank=True)
+    highest_grade = models.CharField(max_length=50, blank=True)
+
+
+class Colleges(models.Model):
+    user = models.ForeignKey(User, related_name='colleges')
+    name = models.CharField(max_length=50, blank=True)
+    highest_degree = models.CharField(max_length=50, blank=True)
+
+class Courses(models.Model):
+    user = models.ForeignKey(User, related_name='courses')
+    course = models.CharField(max_length=50, blank=True)
+    offered = models.BooleanField(default=False)
+    

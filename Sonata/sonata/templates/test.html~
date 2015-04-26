@@ -1,0 +1,12 @@
+<! DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<head> Testing! </head>
+
+<body>
+{% block content %}
+<h1>Here is the list of professors</h1>
+{% for element in lists %}
+  <li><p>{{element.first_name}}, {{element.last_name}}, {{element.department}}</p></li>
+{% endfor %}
+
+<% endblock %>
+</body>
